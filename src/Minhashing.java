@@ -30,7 +30,7 @@ public class Minhashing {
         System.out.println("[Info]: The size of all shingles set = " + allSetSize);
 
         // calculate number of permutation = sqrt(allShinglesSet), non-prime value
-        numOfPermutation = (int)Math.sqrt((double)allSetSize);
+        numOfPermutation = (int)Math.round(Math.sqrt((double)allSetSize));
         if (isPrime(numOfPermutation)) {
             numOfPermutation++;
         }
@@ -39,7 +39,7 @@ public class Minhashing {
     }
 
     // check if value is prime number
-    boolean isPrime(int n) {
+    private boolean isPrime(int n) {
         for (int i = 2; i < n; i++) {
             if (n % i == 0) {
                 return false;
@@ -48,6 +48,15 @@ public class Minhashing {
         return true;
     }
 
+    // set # of permutation
+    public void setNumOfPermutation(int val) {
+        numOfPermutation = val;
+        if (isPrime(numOfPermutation)) {
+            numOfPermutation++;
+        }
+        System.out.println("[Info]: The number of permutation (rows of M) = " + numOfPermutation);
+        signatureMatrix = new int[allDocSize][numOfPermutation];
+    }
     // return # of permutation to combine parameter b and r
     public int getNumOfPermutation() {
         return numOfPermutation;
@@ -128,7 +137,7 @@ public class Minhashing {
 
     // display matrix content
     public void displayMatrix(int[][] matrix) {
-        System.out.println("["+matrix.length+"]["+matrix[0].length+"]");
+        System.out.println("("+matrix.length+", "+matrix[0].length + ")");
         for (int j = 0; j < matrix[0].length; j++) {
             String prefix = "\t";
             for (int i = 0; i < matrix.length; i++) {
@@ -139,13 +148,17 @@ public class Minhashing {
     }
 
     // set signature matrix M
-    public void setSignatureMatrix() {
+    public void setSignatureMatrix(boolean display) {
         int[][] permuteMatrix = generateRandomPermutation();
-        //System.out.print("\t[2] The permutation matrix (col: Permutations, row:Shingles) = ");
-        //displayMatrix(permuteMatrix);
+        if (display) {
+            System.out.print("\t[2] The permutation matrix (col: Permutations, row:Shingles) = ");
+            displayMatrix(permuteMatrix);
+        }
 
         hashFunction(permuteMatrix);
-        //System.out.print("\t[3] The signature matrix M (col: Documents, row: Permutations) = ");
-        //displayMatrix(signatureMatrix);
+        if (display) {
+            System.out.print("\t[3] The signature matrix M (col: Documents, row: Permutations) = ");
+            displayMatrix(signatureMatrix);
+        }
     }
 }
