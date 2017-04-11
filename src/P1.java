@@ -73,7 +73,7 @@ public class P1 {
         System.out.println("[Info]: minhashing tables as following:");
         //System.out.print("\t[1] Input Matrix (col:Documents, row:Shingles) = ");
         //minhashing.displayMatrix(inputMatrix);
-        minhashing.setSignatureMatrix();
+        minhashing.setSignatureMatrix(false);
         int rowOfM = minhashing.getNumOfPermutation();
 
         /* Step4. locality-sensitive hashing
@@ -88,11 +88,23 @@ public class P1 {
         double p1 = 0.997;
         double p2 = 0.003;
         System.out.println("[Info]: Processing Locality-Sensitive Hashing ...");
-        System.out.print("\tTarget(d1, d2, p1, p2)-sensitive = (" + d1 + ", " + d2 + ", ");
+        System.out.print("\tTarget (d1, d2, p1, p2)-sensitive = (" + d1 + ", " + d2 + ", ");
         System.out.println(p1 + ", " + p2 + ")");
-        SearchBandAndRow sbr = new SearchBandAndRow(d1, d2, p1, p2, rowOfM);
-        sbr.displayPossibleBandRow();
-        sbr.searchCombination();
+        SearchBandAndRow sbr = new SearchBandAndRow(d1, d2, p1, p2);
+        int mvalue = 1;
+        System.out.print("\tSearching possible parameter (band, row) and AND or OR construction\n\t");
+        while (!sbr.searchCombination()) {
+            sbr.setRowOfM(mvalue++);
+            System.out.print(".");
+            //sbr.displayPossibleBandRow();
+        }
+        // check if need to regenerate permutation and signature matrix M
+        if (mvalue > rowOfM) {
+            System.out.print("[Info]: Original signature matrix M (row of M) = " + rowOfM + " needs to regenerate with at least '");
+            System.out.println(mvalue + "' to guarantee the probabilities of target (d1, d2, p1, p2)-sensitive");
+            minhashing.setNumOfPermutation(mvalue);
+            minhashing.setSignatureMatrix(false);
+        }
 
         // Step5. Test the similarity for all possible pairs (>= 0.8) and print the answer
     }
