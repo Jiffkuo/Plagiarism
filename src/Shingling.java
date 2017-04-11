@@ -27,12 +27,31 @@ public class Shingling {
             BufferedReader bReader = new BufferedReader(fReader);
             int value = 0;
             int cnt = 0;
+            boolean bwhitespace = false;
+            boolean bappend = false;
             StringBuilder sb = new StringBuilder();
             while((value = bReader.read()) != -1) {
                 // convert value to character
                 char c = (char) value;
-                sb.append(c);
-                cnt++;
+                // merge white space to single blank
+                if (Character.isWhitespace(c) && !bwhitespace) {
+                    if (Character.compare(c, '\n') != 0) {
+                        bwhitespace = true;
+                        bappend = true;
+                    }
+                }
+                // erase punctuation
+                if (Character.isLetterOrDigit(c)) {
+                    bwhitespace = false;
+                    bappend = true;
+                    // all characters convert to lower case
+                    c = Character.isLowerCase(c) ? c : Character.toLowerCase(c);
+                }
+                if (bappend) {
+                    sb.append(c);
+                    cnt++;
+                    bappend = false;
+                }
                 // do k-shingles
                 if (cnt == kvalue) {
                     shinglingset.add(sb.toString());

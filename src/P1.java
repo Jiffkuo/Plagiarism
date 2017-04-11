@@ -66,20 +66,34 @@ public class P1 {
         }
         */
 
-        // Step3. minhashing and save to a signature matrix M
+        // Step3. minhashing input matrix to signature matrix M
         Minhashing minhashing = new Minhashing(docShinglingMap);
         minhashing.setInputMatrix(docIDMap, docShinglingMap);
         int[][] inputMatrix = minhashing.getInputMatrix();
         System.out.println("[Info]: minhashing tables as following:");
-        System.out.println("\t[1] Input Matrix (Document-Shingling)");
-        minhashing.displayMatrix(inputMatrix);
+        //System.out.print("\t[1] Input Matrix (col:Documents, row:Shingles) = ");
+        //minhashing.displayMatrix(inputMatrix);
         minhashing.setSignatureMatrix();
+        int rowOfM = minhashing.getNumOfPermutation();
 
-        // Step4. locality-sensitive
-        // Step4-1. determine parameter b and r
-        // Step4-2. determine AND or OR construction combination
-        // Step4-3. calculate Jaccard Similarity / probability
-        // Step4-4. hash candidate pair to bucket table
-        // Step5. Test the similarity for all possible pairs
+        /* Step4. locality-sensitive hashing
+        // Step4-1. determine parameter b, r, AND or OR construction combination
+        //          to meet (0.2, 0.8, 0.997, 0.003)-sensitive
+        // Step4-2. hash candidate pair to bucket table by referring to
+        //          document set of n-th band. also need to count
+        //          how many a document hash to a bucket (check hash ratio >= 0.8)
+        */
+        double d1 = 0.2;
+        double d2 = 0.8;
+        double p1 = 0.997;
+        double p2 = 0.003;
+        System.out.println("[Info]: Processing Locality-Sensitive Hashing ...");
+        System.out.print("\tTarget(d1, d2, p1, p2)-sensitive = (" + d1 + ", " + d2 + ", ");
+        System.out.println(p1 + ", " + p2 + ")");
+        SearchBandAndRow sbr = new SearchBandAndRow(d1, d2, p1, p2, rowOfM);
+        sbr.displayPossibleBandRow();
+        sbr.searchCombination();
+
+        // Step5. Test the similarity for all possible pairs (>= 0.8) and print the answer
     }
 }
