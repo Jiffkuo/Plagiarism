@@ -74,15 +74,12 @@ public class P1 {
         //System.out.print("\t[1] Input Matrix (col:Documents, row:Shingles) = ");
         //minhashing.displayMatrix(inputMatrix);
         minhashing.setSignatureMatrix(false);
+        int[][] singatureMatrix = minhashing.getSignatureMatrix();
         int rowOfM = minhashing.getNumOfPermutation();
 
-        /* Step4. locality-sensitive hashing
+        // Step4. locality-sensitive hashing
         // Step4-1. determine parameter b, r, AND or OR construction combination
         //          to meet (0.2, 0.8, 0.997, 0.003)-sensitive
-        // Step4-2. hash candidate pair to bucket table by referring to
-        //          document set of n-th band. also need to count
-        //          how many a document hash to a bucket (check hash ratio >= 0.8)
-        */
         double d1 = 0.2;
         double d2 = 0.8;
         double p1 = 0.997;
@@ -94,17 +91,27 @@ public class P1 {
         int mvalue = 1;
         System.out.print("\tSearching possible parameter (band, row) and AND or OR construction\n\t");
         while (!sbr.searchCombination()) {
-            sbr.setRowOfM(mvalue++);
+            sbr.setRowOfM(++mvalue);
             System.out.print(".");
             //sbr.displayPossibleBandRow();
         }
         // check if need to regenerate permutation and signature matrix M
         if (mvalue > rowOfM) {
-            System.out.print("[Info]: Original signature matrix M (row of M) = " + rowOfM + " needs to regenerate with at least '");
-            System.out.println(mvalue + "' to guarantee the probabilities of target (d1, d2, p1, p2)-sensitive");
+            System.out.print("[Info]: Original signature matrix M (row of M) = " + rowOfM + " needs to regenerate ");
+            System.out.print("with at lease'" + mvalue + "' to guarantee the probabilities of target ");
+            System.out.println("(d1, d2, p1, p2)-sensitive");
             minhashing.setNumOfPermutation(mvalue);
             minhashing.setSignatureMatrix(false);
+            singatureMatrix = minhashing.getSignatureMatrix();
+            minhashing.displayMatrix(singatureMatrix);
         }
+        Pair<Integer> brpair = sbr.getResult();
+        // Step4-2. hash candidate pair to bucket table by referring to
+        //          document set of n-th band. also need to count
+        //          how many a document hash to a bucket (check hash ratio >= 0.8)
+        LSH lsh = new LSH(brpair.getValue1(), brpair.getValue2());
+        lsh.hashSigatureToBucket(singatureMatrix);
+        lsh.displayBucketSet(docIDMap);
 
         // Step5. Test the similarity for all possible pairs (>= 0.8) and print the answer
     }

@@ -4,7 +4,12 @@ import java.util.List;
 
 /**
  * Created by Tzu-Chi Kuo on 2017/4/11.
+ * ID: W1279858
+ * Purpose:
+ * 1. Search band and row parameter to meet (d1, d2, p1, p2)-sensitive
+ * 2. Search AND or OR constructions to meet (d1, d2, p1, p2)-sensitive
  */
+
 public class SearchBandAndRow {
     private double d1;
     private double d2;
@@ -55,6 +60,7 @@ public class SearchBandAndRow {
         DecimalFormat df = new DecimalFormat("##.0000");
         return Double.parseDouble(df.format(1 - Math.pow((1 - prob), (double)band)));
     }
+
     // handle with result
     private void saveResult(double p1, double p2, Pair<Double> prob, Pair<Integer> candidate) {
         if (prob.getValue1() == 0.0 && prob.getValue2() == 0.0) {
@@ -76,10 +82,13 @@ public class SearchBandAndRow {
             System.out.print("\n\tFind candidate (band, row) pair = ");
             System.out.print("(" + result.getValue1() + ", " + result.getValue2() + ") and ");
             System.out.println("(p1, p2) = (" + prob.getValue1() + ", " + prob.getValue2() + ")");
-            result = null;
             return true;
         }
     }
+    public Pair<Integer> getResult() {
+        return result;
+    }
+
     // search all possible combination of b, r and ADN, OR constructor
     // if find first (band, row) can meet LSH-sensitive, return
     public boolean searchCombination() {

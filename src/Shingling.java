@@ -5,8 +5,10 @@ import java.util.Set;
 
 /**
  * Created by Tzu-Chi Kuo on 2017/4/10.
+ * ID: W1279858
  * Purpose: k-shingles, to open file and read k-token (character)
  */
+
 public class Shingling {
     private int kvalue;
     private Set<String> shinglingset;

@@ -2,7 +2,10 @@ import java.util.*;
 
 /**
  * Created by Tzu-Chi Kuo on 2017/4/10.
+ * ID: W1279858
+ * Purpose: implement minhashing function, hash input boolean Matrix to signature Matrix
  */
+
 public class Minhashing {
     private Set<String> shinglingAllSet;
     private int[][] inputMatrix;
@@ -160,5 +163,10 @@ public class Minhashing {
             System.out.print("\t[3] The signature matrix M (col: Documents, row: Permutations) = ");
             displayMatrix(signatureMatrix);
         }
+    }
+
+    // get signature matrix M
+    public int[][] getSignatureMatrix() {
+        return signatureMatrix;
     }
 }
