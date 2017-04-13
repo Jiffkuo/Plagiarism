@@ -16,9 +16,9 @@ public class Minhashing {
 
     // constructor
     @SuppressWarnings("unchecked")
-    public Minhashing (Map<String, Set> allmap) {
+    public Minhashing (Map<String, Set<String>> allmap) {
         shinglingAllSet = new HashSet<>();
-        for (Map.Entry<String, Set> entry : allmap.entrySet()) {
+        for (Map.Entry<String, Set<String>> entry : allmap.entrySet()) {
             Set<String> shingles = entry.getValue();
             for (String s : shingles) {
                 shinglingAllSet.add(s);
@@ -67,7 +67,7 @@ public class Minhashing {
 
     // set input matrix M
     @SuppressWarnings("unchecked")
-    public void setInputMatrix(Map<Integer, String> docidmap, Map<String, Set> allmap) {
+    public void setInputMatrix(Map<Integer, String> docidmap, Map<String, Set<String>> allmap) {
         // check doc ID map is valid
         if (docidmap.size() != allDocSize) {
             System.out.println("[Error]: Document ID-File hashmap doesn't match");

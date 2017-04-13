@@ -14,6 +14,7 @@ public class LSH {
     private int bandsOfM;
     private int rowsOfM;
     private Map<String, List<Pair<Integer>>> bucketSet;
+    private Map<String, Integer> candidateSet;
 
     // Constructor
     public LSH(int band, int row) {
@@ -71,7 +72,7 @@ public class LSH {
     public void displayBucketSet(Map<Integer, String> docidmap) {
         int bucketid = 0;
         for (Map.Entry<String, List<Pair<Integer>>> bucket : bucketSet.entrySet()) {
-            System.out.print("\t bucket '" + bucketid + "' =");
+            System.out.print("\t bucket '" + bucketid + "' = ");
             List<Pair<Integer>> value = bucket.getValue();
             for (Pair<Integer> p : value) {
                 String filename = docidmap.get(p.getValue1());
@@ -80,5 +81,39 @@ public class LSH {
             System.out.println();
             bucketid++;
         }
+    }
+
+    // exam candidate pair is plagiarism or not
+    public Map<String, Integer> getCandidatePair() {
+        candidateSet = new HashMap<>();
+        for (Map.Entry<String, List<Pair<Integer>>> bucket : bucketSet.entrySet()) {
+            List<Pair<Integer>> value = bucket.getValue();
+            if (value.size() > 1) {
+                // find union count
+                int unionCnt = Integer.MAX_VALUE;
+                StringBuilder sb = new StringBuilder();
+                String prefix = "";
+                for (Pair<Integer> p : value) {
+                    sb.append(prefix + p.getValue1());
+                    if (p.getValue2() < unionCnt) {
+                        unionCnt = p.getValue2();
+                    }
+                    prefix = ",";
+                }
+                // store candidate
+                String key = sb.toString();
+                if (!candidateSet.containsKey(key)) {
+                    candidateSet.put(key, unionCnt);
+                } else {
+                    candidateSet.put(key, candidateSet.get(key) + unionCnt);
+                }
+            }
+        }
+        // debug
+        for (Map.Entry<String, Integer> pair : candidateSet.entrySet()) {
+            System.out.println("\tbuckets (" + pair.getKey() + ") = " + pair.getValue());
+        }
+
+        return candidateSet;
     }
 }

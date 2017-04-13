@@ -27,7 +27,7 @@ public class Shingling {
         try {
             FileReader fReader = new FileReader(file);
             BufferedReader bReader = new BufferedReader(fReader);
-            int value = 0;
+            int value;
             int cnt = 0;
             boolean bwhitespace = false;
             boolean bappend = false;
