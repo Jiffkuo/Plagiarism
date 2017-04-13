@@ -57,7 +57,7 @@ public class Minhashing {
         if (isPrime(numOfPermutation)) {
             numOfPermutation++;
         }
-        System.out.println("[Info]: The number of permutation (rows of M) = " + numOfPermutation);
+        //System.out.println("[Info]: The number of permutation (rows of M) = " + numOfPermutation);
         signatureMatrix = new int[allDocSize][numOfPermutation];
     }
     // return # of permutation to combine parameter b and r

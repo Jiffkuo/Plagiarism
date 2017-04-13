@@ -48,9 +48,8 @@ public class Similarities {
     // get result
     public void displayResult() {
         if (resultSet.size() == 0) {
-            System.out.println("[Info]: No plagiarism found!");
+            System.out.println("\tNo plagiarism found!");
         } else {
-            System.out.println("[Info]: Find all possible candidate pairs are plagiarism as following:");
             for (String s : resultSet) {
                 System.out.println("\t(" + s + ")");
             }
@@ -59,7 +58,7 @@ public class Similarities {
 
     public void testCandidatePair(Map<Integer, String> docidmap, Map<String, Integer> canpair, int[][] inputs) {
         if (canpair.size() == 0) {
-            System.out.println("[Info]: There is no candidate pair in Plagiarism");
+            System.out.println("\tThere is no candidate pair in Plagiarism");
             System.exit(0);
         } else {
             for (Map.Entry<String, Integer> pair : canpair.entrySet()) {

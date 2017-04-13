@@ -71,7 +71,7 @@ public class P1 {
         Minhashing minhashing = new Minhashing(docShinglingMap);
         minhashing.setInputMatrix(docIDMap, docShinglingMap);
         int[][] inputMatrix = minhashing.getInputMatrix();
-        System.out.println("[Info]: minhashing tables as following:");
+        System.out.println("\n[Info-A]: minhashing tables as following:");
         System.out.print("\t[1] Input Matrix (col:Documents, row:Shingles) = ");
         minhashing.displayMatrix(inputMatrix);
         minhashing.setSignatureMatrix(true);
@@ -85,17 +85,18 @@ public class P1 {
         double d2 = 0.8;
         double p1 = 0.997;
         double p2 = 0.003;
-        System.out.println("[Info]: Processing Locality-Sensitive Hashing ...");
+        System.out.println("\n[Info-B]: Processing Locality-Sensitive Hashing ...");
         System.out.print("\tTarget (d1, d2, p1, p2)-sensitive = (" + d1 + ", " + d2 + ", ");
         System.out.println(p1 + ", " + p2 + ")");
         SearchBandAndRow sbr = new SearchBandAndRow(d1, d2, p1, p2);
         int mvalue = 1;
-        System.out.print("\tSearching possible parameter (band, row) and AND or OR construction\n\t");
-        while (!sbr.searchCombination()) {
+        System.out.print("\tSearching possible parameter (band, row) and AND or OR construction\n\tProcessing ");
+        while (!sbr.searchCombination(false)) {
             sbr.setRowOfM(++mvalue);
             System.out.print(".");
             //sbr.displayPossibleBandRow();
         }
+        System.out.println();
         // check if need to regenerate permutation and signature matrix M
         if (mvalue > rowOfM) {
             System.out.print("[Info]: Original signature matrix M (row of M) = " + rowOfM + " needs to regenerate ");
@@ -104,7 +105,7 @@ public class P1 {
             minhashing.setNumOfPermutation(mvalue);
             minhashing.setSignatureMatrix(false);
             singatureMatrix = minhashing.getSignatureMatrix();
-            //minhashing.displayMatrix(singatureMatrix);
+            minhashing.displayMatrix(singatureMatrix);
         }
         Pair<Integer> brpair = sbr.getResult();
         // Step4-2. hash candidate pair to bucket table by referring to
@@ -112,10 +113,12 @@ public class P1 {
         //          how many a document hash to a bucket (check hash ratio >= 0.8)
         LSH lsh = new LSH(brpair.getValue1(), brpair.getValue2());
         lsh.hashSigatureToBucket(singatureMatrix);
+        System.out.println("[Info]: Similar columns hash to the same buckets as following:");
         lsh.displayBucketSet(docIDMap);
         Map<String, Integer> candidatePair = lsh.getCandidatePair();
 
         // Step5. Test the similarity for all possible pairs (>= 0.8) and print the answer
+        System.out.println("\n[Info-C]: Find all possible candidate pairs are plagiarism as following:");
         Similarities sims = new Similarities(brpair.getValue1(), (1 - d1));
         sims.testCandidatePair(docIDMap, candidatePair, inputMatrix);
         sims.displayResult();

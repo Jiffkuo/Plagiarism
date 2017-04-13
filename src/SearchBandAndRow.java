@@ -81,7 +81,8 @@ public class SearchBandAndRow {
         } else {
             System.out.print("\n\tFind candidate (band, row) pair = ");
             System.out.print("(" + result.getValue1() + ", " + result.getValue2() + ") and ");
-            System.out.println("(p1, p2) = (" + prob.getValue1() + ", " + prob.getValue2() + ")");
+            System.out.print("(p1, p2) = (" + prob.getValue1() + ", " + prob.getValue2() + ")");
+            System.out.println(" to achieve the requirement");
             return true;
         }
     }
@@ -89,20 +90,33 @@ public class SearchBandAndRow {
         return result;
     }
 
+    // display processing
+    private void displayProcess(Pair<Integer> p, double p1, double p2) {
+        System.out.print("\n\ttest candidate (band, row) pair = ");
+        System.out.print("(" + p.getValue1() + ", " + p.getValue2() + ") and ");
+        System.out.println("(p1, p2) = (" + p1 + ", " + p2 + ")");
+    }
+
     // search all possible combination of b, r and ADN, OR constructor
     // if find first (band, row) can meet LSH-sensitive, return
-    public boolean searchCombination() {
+    public boolean searchCombination(boolean isdisplay) {
         DecimalFormat df = new DecimalFormat("##.0");
         double p1 = Double.parseDouble(df.format(1.0 - d1));
         double p2 = Double.parseDouble(df.format(1.0 - d2));
         Pair<Double> prob = new Pair<>(0.0, 0.0);
 
         // AND (row) construction
+        if (isdisplay) {
+            System.out.println("\tTest 'AND' construction");
+        }
         for (Pair<Integer> p : brSet) {
             double tmp1 = andOp(p.getValue2(), p1);
             double tmp2 = andOp(p.getValue2(), p2);
             if (tmp1 >= targetP1 && tmp2 <= targetP2) {
                 saveResult(tmp1, tmp2, prob, p);
+            }
+            if (isdisplay) {
+                displayProcess(p, tmp1, tmp2);
             }
         }
         if(isfindResult(prob)) {
@@ -111,11 +125,17 @@ public class SearchBandAndRow {
         }
 
         // OR (band) construction
+        if (isdisplay) {
+            System.out.println("\tTest 'OR' construction");
+        }
         for (Pair<Integer> p : brSet) {
             double tmp1 = orOp(p.getValue1(), p1);
             double tmp2 = orOp(p.getValue1(), p2);
             if (tmp1 >= targetP1 && tmp2 <= targetP2) {
                 saveResult(tmp1, tmp2, prob, p);
+            }
+            if (isdisplay) {
+                displayProcess(p, tmp1, tmp2);
             }
         }
         if(isfindResult(prob)) {
@@ -124,11 +144,17 @@ public class SearchBandAndRow {
         }
 
         // AND-OR construction
+        if (isdisplay) {
+            System.out.println("\tTest 'AND-OR' construction");
+        }
         for (Pair<Integer> p : brSet) {
             double tmp1 = orOp(p.getValue1(), andOp(p.getValue2(), p1));
             double tmp2 = orOp(p.getValue1(), andOp(p.getValue2(), p2));
             if (tmp1 >= targetP1 && tmp2 <= targetP2) {
                 saveResult(tmp1, tmp2, prob, p);
+            }
+            if (isdisplay) {
+                displayProcess(p, tmp1, tmp2);
             }
         }
         if(isfindResult(prob)) {
@@ -137,11 +163,17 @@ public class SearchBandAndRow {
         }
 
         // OR-AND construction
+        if (isdisplay) {
+            System.out.println("\tTest 'OR-AND' construction");
+        }
         for (Pair<Integer> p : brSet) {
             double tmp1 = andOp(p.getValue2(), orOp(p.getValue1(), p1));
             double tmp2 = andOp(p.getValue2(), orOp(p.getValue1(), p2));
             if (tmp1 >= targetP1 && tmp2 <= targetP2) {
                 saveResult(tmp1, tmp2, prob, p);
+            }
+            if (isdisplay) {
+                displayProcess(p, tmp1, tmp2);
             }
         }
         if(isfindResult(prob)) {

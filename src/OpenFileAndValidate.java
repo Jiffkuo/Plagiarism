@@ -27,7 +27,7 @@ public class OpenFileAndValidate {
                 setFiles(bReader);
                 fReader.close();
             } catch (Exception e) {
-                System.out.println("[Error]: No such file '" + inputs[i] + "'");
+                System.out.println("[Error]: No such file '" + inputs[i] + "' from arguments");
                 System.exit(0);
             }
         }
@@ -54,7 +54,7 @@ public class OpenFileAndValidate {
                 String[] files = line.trim().split("[\\s\\t]+");
                 for (String file : files) {
                     // skip empty line
-                    if (file.equals("\n")) {
+                    if (file.equals("\n") || file.equals("")) {
                         continue;
                     }
                     // check file exist or not

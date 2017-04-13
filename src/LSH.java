@@ -72,7 +72,7 @@ public class LSH {
     public void displayBucketSet(Map<Integer, String> docidmap) {
         int bucketid = 0;
         for (Map.Entry<String, List<Pair<Integer>>> bucket : bucketSet.entrySet()) {
-            System.out.print("\t bucket '" + bucketid + "' = ");
+            System.out.print("\tbucket '" + bucketid + "' = ");
             List<Pair<Integer>> value = bucket.getValue();
             for (Pair<Integer> p : value) {
                 String filename = docidmap.get(p.getValue1());
@@ -109,9 +109,9 @@ public class LSH {
                 }
             }
         }
-        // debug
+        // display possible candidate pair set
         for (Map.Entry<String, Integer> pair : candidateSet.entrySet()) {
-            System.out.println("\tbuckets (" + pair.getKey() + ") = " + pair.getValue());
+            System.out.println("\t- buckets (" + pair.getKey() + ") = " + pair.getValue());
         }
 
         return candidateSet;
